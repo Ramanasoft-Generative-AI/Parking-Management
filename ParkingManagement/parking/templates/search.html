@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Category</title>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+	<style>
+		/* Set the width of the side navigation to 250px */
+		.sidebar {
+		  height: 450px; /* Full-height: remove this if you want "auto" height */
+		  width: 250px; /* Set the width of the sidebar */
+		  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+		  z-index: 1; /* Stay on top */
+		  background-color: rgb(37, 37, 37); /* Black */
+		  overflow-x: hidden; /* Disable horizontal scroll */
+		  padding-top: 20px;
+		  color: white;
+		  font-family: 'Times New Roman', Times, serif;
+		  margin-top: 19px;
+      font-size: 18px;
+		}
+		/* Style sidebar links */
+		.sidebar a {
+		  padding: 6px 8px 6px 16px;
+		  color: #818181;
+		  display: block;
+		  color: white;
+		  padding-left: 20px;
+		}
+
+		/* Change color of links on hover */
+		.sidebar a:hover {
+		  color: #f1f1f1;
+		  background: rgb(25, 107, 178);
+      text-decoration: none;
+		}
+
+		/* Style the top navigation bar */
+		.navbar {
+		  background-color: rgb(37, 37, 37); /* Dark grey */
+		  position: fixed; /* Sticky/fixed navbar */
+		  z-index: 1; /* Stay on top */
+		  width: 100%; /* Full width */
+		  overflow: hidden; /* Disable horizontal scroll */
+		  top: 0; /* Stay at the top */
+		  color: white;
+		}
+
+		/* Style the navbar links */
+		.navbar a {
+		  float: left;
+		  display: block;
+		  color: #f2f2f2;
+		  text-align: center;
+		  font-family: 'Times New Roman', Times, serif;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change color of navbar links on hover */
+		.navbar a:hover {
+		  background-color: #ddd;
+		  color: rgb(37, 36, 36);
+		  background: rgb(68, 128, 219);
+		}
+
+		/* Add a background color and some padding around the page content */
+		.main {
+		  margin-top: 50px; /* Add a top margin to avoid content overlaying navbar */
+		  padding: 40px;
+		  margin-left: 20%; /* Same width as the sidebar */
+		  height: 600px; /* Used in this example to show scroll bar */
+          margin-top: 50px;
+        }
+
+        .main-container1{
+        display:flex;
+        width:100v w;
+        top: 20px;
+        }
+        .container{
+        margin:10px;
+        }
+	</style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar">
+	<h4><i class="fa-solid fa-car-side"></i>&nbsp;SMPS</h4>
+	<a href="#"><i class="fa fa-user-circle" aria-hidden="true"></i>Welcome Adminstration</a>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+	    <a href="{% url 'dashboard' %}"><i class="fa fa-dashboard" aria-hidden="true"></i>&nbsp;Dashboard</a>
+	    <a href="{% url 'addCat' %}"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Category</a>
+        <a href="{% url 'Display' %}"><i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;Category</a>
+        <a href="{% url 'Vehicle' %}"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;Vehicle Entry</a>
+        <a href="{% url 'Manage' %}"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;Manage Vehicles</a>
+        <a href="{% url 'reports' %}"><i class="fa fa-line-chart" aria-hidden="true"></i>&nbsp;Reports</a>
+        <a href="{% url 'search' %}"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;Search</a>
+        <a href="{% url 'accountsettings' %}"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Account Setting</a>
+        <li class="nav-item list-unstyled" mr-3>
+                    <a class="nav-link" href="javascript: {document.getElementById('logout').submit()}">
+                        <i class="fa fa-power-off"></i>Logout
+                    </a>
+                    <form action="{% url 'logout' %}" id="logout" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden">
+                    </form>
+                </li>
+</div>
+
+<!-- Page Content -->
+<div class="main">
+    <div class="container">
+		<div class="card">
+            <div class="card-header">Search Data| only the records of the last 30 days are available here</div>
+                   <br>
+                   <br>
+                   <br>
+            <form class="d-flex" role="search" method="get" action="{% url 'search' %}">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+              <button class="btn btn-outline-secondary btn-dark" type="button" id="button-addon2"><i class="fa fa-search "></i></button>
+            </form>
+                  <br>
+                  <br>
+
+           <table id="example" class="table table-bordered" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Vehicle Number</th>
+                    <th>Type</th>
+                    <th>Area No.</th>
+                    <th>Charge</th>
+                    <th>Arrival Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% block content %}
+                         {% if display1 %}
+                            {% for x in display1 %}
+                                 <tr>
+                                    <td>{{x.id}}</td>
+                                    <td>{{x.vehicle_no}}</td>
+                                    <td>{{x.vehicle_type}}</td>
+                                    <td>{{x.parking_area_no}}</td>
+                                    <td>{{x.parking_charge}}</td>
+                                    <td>{{x.arrival_time}}</td>
+                                    <td>{{x.status}}</td>
+                                    <td>{{x.action}}</td>
+                                 </tr>
+                      {% endfor %}
+                    {% else %}
+                        <p>...No Vehicles...</p>
+                    {% endif %}
+                 {% endblock %}
+
+                </tr>
+                </tr>
+            </tbody>
+           </table>
+    </div>
+
+
+</body>
+</html>
